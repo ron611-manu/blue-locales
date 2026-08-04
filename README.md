@@ -1,0 +1,2 @@
+# blue-locales
+locales paramo
