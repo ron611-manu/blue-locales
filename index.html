@@ -6,49 +6,76 @@
 <title>Blue Café · Concepto de local en Páramo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,500;1,600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#EDE7DB;
-    --paper-2:#E4DCCB;
-    --ink:#171310;
-    --navy:#0F1C2E;
-    --navy-2:#182B45;
-    /* Tomados del empaque Blue Café */
-    --pack-blue:#093C71;
-    --pack-blue-hi:#0C4A88;
-    --pack-blue-lo:#05264A;
-    --pack-gold:#D6A260;
-    --gold:#C39A5F;
-    --gold-soft:#B08D57;
-    --cream:#F5EFE2;
-    --muted:#8b8271;
-    --terra-1:#8a3a1e;
-    --terra-2:#c97a2b;
-    --terra-3:#e0a63f;
-    --line:rgba(23,19,16,.12);
-    --line-dark:rgba(245,239,226,.14);
-    --gold-line:rgba(195,154,95,.30);
+    /* Café tostado, más definido y frío para dialogar con el azul */
+    --bg-1:#2A1C14;
+    --bg-2:#1A110C;
+    --bg-3:#100A07;
+    --surface:rgba(246,232,212,.055);
+    --surface-2:rgba(246,232,212,.09);
+
+    /* Azul del empaque, en tono profundo */
+    --pack-blue:#08305B;
+    --pack-blue-hi:#0B4074;
+    --pack-blue-lo:#041B34;
+
+    --gold:#D6A260;
+    --gold-hi:#E6BC83;
+    --gold-soft:#C08F4E;
+
+    --cream:#F4E9D9;
+    --body:rgba(244,233,217,.76);
+    --muted:rgba(244,233,217,.52);
+
+    --terra-1:#7E3418;
+    --terra-2:#BE6F24;
+    --terra-3:#D79A33;
+
+    --line:rgba(214,162,96,.22);
+    --line-soft:rgba(214,162,96,.14);
+    --line-dark:rgba(244,233,217,.14);
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
-  html,body{ height:100%; background:var(--ink); overscroll-behavior:none; }
+  html,body{ height:100%; background:var(--bg-3); overscroll-behavior:none; }
   body{
     font-family:'Space Grotesk','Helvetica Neue',Arial,sans-serif;
-    color:var(--ink);
+    color:var(--cream);
     overflow:hidden;
   }
 
-  .wordmark{ font-family:'Cormorant Garamond',serif; font-weight:600; }
-  .wordmark span{ color:var(--gold); }
   .script{
     font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    font-weight:600;
-    letter-spacing:.005em;
+    font-style:italic; font-weight:600; letter-spacing:.005em;
   }
-  .ve-flag{ display:block; border-radius:2px; overflow:hidden; box-shadow:0 0 0 1px rgba(23,19,16,.08); flex:none; }
 
-  .deck{ position:relative; width:100vw; height:100vh; background:var(--paper); }
+  /* ---------- Logotipo del encabezado (réplica del empaque) ---------- */
+  .brand-row{ display:flex; align-items:center; gap:clamp(9px,1vw,13px); }
+  .wm-blue{
+    font-family:'Cormorant Garamond',serif; font-weight:400;
+    font-size:clamp(27px,2.5vw,36px); line-height:.82;
+    color:var(--cream); letter-spacing:.012em;
+  }
+  .wm-sep{ width:1px; height:clamp(19px,1.9vw,26px); background:rgba(214,162,96,.5); flex:none; }
+  .wm-cafe{
+    font-size:clamp(9px,.82vw,11px); letter-spacing:.42em; text-indent:.42em;
+    text-transform:uppercase; color:var(--gold); font-weight:500; white-space:nowrap;
+  }
+
+  /* ---------- Silueta de Venezuela ---------- */
+  @keyframes veSway{
+    0%,100%{ transform:translateY(0) rotate(-1.5deg) }
+    50%{ transform:translateY(-3px) rotate(2deg) }
+  }
+  .ve-map{
+    flex:none; color:var(--gold);
+    filter:drop-shadow(0 0 7px rgba(214,162,96,.4));
+    animation:veSway 5.5s ease-in-out infinite;
+    transform-origin:50% 60%;
+  }
+
+  .deck{ position:relative; width:100vw; height:100vh; cursor:pointer; background:var(--bg-3); }
   .slide{
     position:absolute; inset:0;
     display:flex; flex-direction:column;
@@ -56,23 +83,57 @@
     opacity:0; visibility:hidden;
     transform:translateY(18px);
     transition:opacity .5s ease, transform .5s ease;
-    background:var(--paper);
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+    background:
+      radial-gradient(62% 52% at 8% -6%, rgba(214,162,96,.09), rgba(214,162,96,0) 62%),
+      radial-gradient(70% 62% at 104% 102%, rgba(11,64,116,.34), rgba(11,64,116,0) 64%),
+      linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 52%, var(--bg-3) 100%);
   }
   .slide.active{ opacity:1; visibility:visible; transform:translateY(0); }
   .slide > *{ flex-shrink:0; }
+  .slide > *:not(.decor){ position:relative; z-index:1; }
   .shrink{ min-height:0; }
 
   .slide-head{
     display:flex; justify-content:space-between; align-items:flex-start;
-    margin-bottom:clamp(16px,3.2vh,32px);
-    gap:16px;
+    margin-bottom:clamp(16px,3.2vh,32px); gap:16px;
   }
   .brand-block{ display:flex; flex-direction:column; gap:9px; }
-  .brand-block .wordmark{ font-size:19px; }
   .eyebrow{ font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); font-weight:500; }
   .slide-index{ font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); text-align:right; white-space:nowrap; }
+
+  /* ---------- Íconos de café flotando al fondo ---------- */
+  .decor{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+  @keyframes drift{
+    0%,100%{ transform:translate(-50%,-50%) rotate(var(--r,0deg)) scale(1) }
+    50%{ transform:translate(calc(-50% + 7px), calc(-50% - 13px)) rotate(calc(var(--r,0deg) + 4deg)) scale(1.04) }
+  }
+  @keyframes decBreathe{ 0%,100%{ opacity:var(--o,.10) } 50%{ opacity:calc(var(--o,.10) * 1.55) } }
+  .dec{
+    position:absolute; left:var(--x); top:var(--y);
+    width:var(--s,70px); height:var(--s,70px);
+    color:var(--gold); opacity:var(--o,.10);
+    stroke-width:1.5; fill:none;
+    stroke-linecap:round; stroke-linejoin:round;
+    animation:
+      drift var(--t,16s) ease-in-out infinite var(--dd,0s),
+      decBreathe calc(var(--t,16s) * .8) ease-in-out infinite var(--dd,0s);
+  }
+
+  /* ---------- Entradas animadas ---------- */
+  @keyframes rvUp{ from{opacity:0; transform:translateY(24px)} to{opacity:1; transform:none} }
+  @keyframes rvPanel{ from{opacity:0; transform:translateY(26px) scale(.972)} to{opacity:1; transform:none} }
+  @keyframes rvPop{ from{opacity:0; transform:scale(.72)} to{opacity:1; transform:scale(1)} }
+
+  .slide.active .rv{ animation:rvUp .8s cubic-bezier(.22,.72,.28,1) var(--d,0s) both; }
+  .slide.active .rv-panel{ animation:rvPanel 1s cubic-bezier(.22,.72,.28,1) var(--d,0s) both; }
+  .slide.active .illo-grid .cell{ animation:rvPop .5s cubic-bezier(.34,1.45,.5,1) both; }
+  .slide.active .illo-grid .cell:nth-child(1){ animation-delay:.55s }
+  .slide.active .illo-grid .cell:nth-child(2){ animation-delay:.63s }
+  .slide.active .illo-grid .cell:nth-child(3){ animation-delay:.71s }
+  .slide.active .illo-grid .cell:nth-child(4){ animation-delay:.79s }
+  .slide.active .illo-grid .cell:nth-child(5){ animation-delay:.87s }
+  .slide.active .illo-grid .cell:nth-child(6){ animation-delay:.95s }
 
   .stagger > *{ opacity:0; transform:translateY(14px); transition:opacity .55s ease, transform .55s ease; }
   .slide.active .stagger > *{ opacity:1; transform:translateY(0); }
@@ -81,18 +142,16 @@
   .stagger > *:nth-child(3){ transition-delay:.23s; }
   .stagger > *:nth-child(4){ transition-delay:.32s; }
 
-  /* ---------- Rejilla de ilustraciones (estilo empaque) ---------- */
-  .illo-grid{
-    display:grid;
-    border:1px solid var(--gold-line);
-    border-radius:6px;
-    overflow:hidden;
+  @media (prefers-reduced-motion:reduce){
+    .slide.active .rv, .slide.active .rv-panel, .slide.active .illo-grid .cell{ animation:none; opacity:1; transform:none; }
+    .dec, .ve-map{ animation:none; }
   }
+
+  /* ---------- Rejilla de ilustraciones (estilo empaque) ---------- */
+  .illo-grid{ display:grid; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
   .illo-grid .cell{
-    aspect-ratio:1/1;
-    display:flex; align-items:center; justify-content:center;
-    border-right:1px solid rgba(195,154,95,.22);
-    border-bottom:1px solid rgba(195,154,95,.22);
+    aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+    border-right:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
   }
   .illo-grid svg{ width:56%; height:56%; }
   .illo-3{ grid-template-columns:repeat(3,1fr); }
@@ -108,257 +167,255 @@
   .s1-lead{ flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0; }
   .s1-left .kicker{
     font-size:12px; letter-spacing:.24em; text-transform:uppercase;
-    color:var(--gold-soft); font-weight:600; margin-bottom:18px;
+    color:var(--gold); font-weight:600; margin-bottom:18px;
   }
   .s1-left h1{
     font-size:clamp(32px,min(4.9vw,7.8vh),70px);
-    line-height:1.03; font-weight:700; letter-spacing:-.016em; max-width:12ch;
+    line-height:1.03; font-weight:700; letter-spacing:-.016em; max-width:12ch; color:var(--cream);
   }
-  .s1-left h1 .script{ display:block; font-weight:600; color:var(--gold-soft); letter-spacing:0; }
+  .s1-left h1 .script{ display:block; font-weight:500; color:var(--gold-hi); letter-spacing:0; }
   .s1-left p{
     margin-top:20px; font-size:clamp(14px,1.2vw,16.5px); line-height:1.6;
-    color:#4c463b; max-width:38ch; font-weight:400;
+    color:var(--body); max-width:38ch; font-weight:400;
   }
   .s1-meta{ display:flex; gap:clamp(22px,2.8vw,44px); margin-top:clamp(22px,3.6vh,36px); flex-wrap:wrap; }
   .s1-meta div span{
     display:block; font-size:10px; letter-spacing:.2em; text-transform:uppercase;
     color:var(--muted); margin-bottom:6px;
   }
-  .s1-meta div strong{ font-size:13.5px; font-weight:500; }
+  .s1-meta div strong{ font-size:13.5px; font-weight:500; color:var(--cream); }
 
-  /* Índice horizontal al pie de la columna izquierda */
+  /* Índice navegable */
   .s1-agenda{
-    display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(10px,1.4vw,20px);
-    border-top:1px solid var(--line); padding-top:clamp(14px,2vh,20px);
+    display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(8px,1.1vw,14px);
+    border-top:1px solid var(--line); padding-top:clamp(12px,1.8vh,18px);
     margin-top:clamp(20px,3vh,32px);
   }
-  .s1-agenda .item .no{
-    display:block; font-size:11px; letter-spacing:.2em;
-    color:var(--gold-soft); font-weight:600; margin-bottom:6px;
+  .nav-item{
+    background:none; border:0; text-align:left; cursor:pointer; font:inherit;
+    padding:9px 10px 10px; border-radius:9px;
+    transition:background .25s ease, transform .25s ease;
   }
-  .s1-agenda .item .lbl{ font-size:clamp(11.5px,.95vw,13px); line-height:1.35; color:#6d6555; }
-  .s1-agenda .item.now .lbl{ color:var(--ink); font-weight:600; }
-  .s1-agenda .item.now .no{ color:var(--gold); }
+  .nav-item:hover, .nav-item:focus-visible{ background:var(--surface); transform:translateY(-2px); outline:none; }
+  .nav-item .no{
+    display:block; font-size:11px; letter-spacing:.2em;
+    color:var(--gold); font-weight:600; margin-bottom:6px;
+  }
+  .nav-item .lbl{
+    display:block; font-size:clamp(11.5px,.95vw,13px); line-height:1.35; color:var(--body);
+  }
+  .nav-item .bar{
+    display:block; height:1px; width:0; background:var(--gold); margin-top:8px;
+    transition:width .3s ease;
+  }
+  .nav-item:hover .bar, .nav-item:focus-visible .bar{ width:100%; }
+  .nav-item.now .lbl{ color:var(--cream); font-weight:600; }
+  .nav-item.now .bar{ width:100%; }
 
-  /* Panel derecho: réplica del frente del empaque */
+  /* Panel derecho: frente del empaque */
   .s1-right{
     position:relative; border-radius:16px; overflow:hidden;
     background:
-      radial-gradient(110% 80% at 50% 0%, rgba(214,162,96,.14), rgba(214,162,96,0) 60%),
+      radial-gradient(110% 80% at 50% 0%, rgba(214,162,96,.07), rgba(214,162,96,0) 62%),
       linear-gradient(168deg, var(--pack-blue-hi) 0%, var(--pack-blue) 46%, var(--pack-blue-lo) 100%);
     padding:clamp(12px,1.8vh,18px);
     display:flex;
+    box-shadow:0 18px 46px rgba(0,0,0,.42);
   }
   .pack-frame{
     flex:1; min-height:0;
-    border:1px solid rgba(214,162,96,.34); border-radius:9px;
+    border:1px solid rgba(214,162,96,.36); border-radius:9px;
     display:flex; flex-direction:column; align-items:center;
     padding:clamp(18px,3vh,30px) clamp(16px,2.2vw,28px) clamp(14px,2.2vh,22px);
-    gap:clamp(10px,1.8vh,20px);
-    color:#fff;
+    gap:clamp(10px,1.8vh,20px); color:#fff;
   }
   .pack-blue{
     font-family:'Cormorant Garamond',serif; font-weight:300;
-    font-size:clamp(42px,min(5.4vw,8.6vh),80px);
-    line-height:.9; color:#fff; letter-spacing:.005em;
+    font-size:clamp(42px,min(5.4vw,8.6vh),80px); line-height:.9; color:#fff; letter-spacing:.005em;
   }
   .pack-cafe{
     display:block; margin-top:clamp(4px,.8vh,9px);
     font-size:clamp(11px,1.25vw,15px); letter-spacing:.44em; text-indent:.44em;
-    text-transform:uppercase; color:var(--pack-gold); font-weight:500;
+    text-transform:uppercase; color:var(--gold); font-weight:500;
   }
   .pack-rule{ width:44px; height:1px; background:rgba(214,162,96,.55); }
-  .pack-script{ color:rgba(255,255,255,.82); font-size:clamp(14px,1.55vw,20px); line-height:1; text-align:center; }
+  .pack-script{ color:rgba(255,255,255,.84); font-size:clamp(14px,1.55vw,20px); line-height:1; text-align:center; }
   .s1-illo{ flex:1; display:flex; align-items:center; justify-content:center; min-height:0; width:100%; }
   .s1-illo .illo-grid{ width:min(100%,clamp(200px,37vh,375px)); border-color:rgba(214,162,96,.34); }
   .s1-illo .cell{ border-right-color:rgba(214,162,96,.24); border-bottom-color:rgba(214,162,96,.24); }
-  .pack-foot{
-    font-size:9.5px; letter-spacing:.3em; text-transform:uppercase;
-    color:rgba(255,255,255,.55); text-align:center;
-  }
+  .pack-foot{ font-size:9.5px; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.58); text-align:center; }
 
   /* ================= LÁMINA 2 — IDENTIDAD ================= */
-  .s2-head{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:24px; margin-bottom:clamp(14px,2.8vh,26px);
-  }
+  .s2-head{ display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:clamp(14px,2.8vh,26px); }
   .s2-title{
     font-size:clamp(21px,min(2.7vw,4.2vh),35px);
-    font-weight:700; letter-spacing:-.012em; max-width:22ch; line-height:1.12;
+    font-weight:700; letter-spacing:-.012em; max-width:22ch; line-height:1.12; color:var(--cream);
   }
-  .s2-title .script{ color:var(--gold-soft); font-weight:600; letter-spacing:0; }
+  .s2-title .script{ color:var(--gold-hi); font-weight:500; letter-spacing:0; }
   .s2-illos{ flex:none; }
-  .s2-illos .illo-grid{ width:clamp(120px,15vw,190px); color:var(--gold-soft); }
-  .s2-illos .illo-grid{ border-color:rgba(23,19,16,.16); }
-  .s2-illos .cell{ border-right-color:rgba(23,19,16,.12); border-bottom-color:rgba(23,19,16,.12); }
+  .s2-illos .illo-grid{ width:clamp(120px,15vw,190px); color:var(--gold); background:var(--surface); }
 
   .s2-grid{ flex:1; display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
   .touch-card{
-    background:linear-gradient(165deg, var(--navy-2), var(--navy));
+    background:linear-gradient(168deg, var(--pack-blue-hi), var(--pack-blue) 55%, var(--pack-blue-lo));
     border-radius:13px; padding:20px 18px 18px;
     display:flex; flex-direction:column; color:var(--cream); position:relative; overflow:hidden;
+    box-shadow:0 14px 34px rgba(0,0,0,.34);
   }
   .touch-card .ic{
     width:36px; height:36px; border-radius:50%;
-    border:1px solid rgba(195,154,95,.45);
+    border:1px solid rgba(214,162,96,.5);
     display:flex; align-items:center; justify-content:center; margin-bottom:12px; flex:none;
   }
   .touch-card .ic svg{ width:17px; height:17px; }
   .touch-card .no{ font-size:10px; letter-spacing:.16em; color:var(--gold); margin-bottom:6px; }
   .touch-card h4{ font-size:15.5px; font-weight:600; margin-bottom:6px; line-height:1.18; }
-  .touch-card p{ font-size:11.5px; line-height:1.5; color:rgba(245,239,226,.62); font-weight:400; }
+  .touch-card p{ font-size:11.5px; line-height:1.5; color:rgba(244,233,217,.66); font-weight:400; }
   .touch-visual{
     flex:1; margin:14px 0; min-height:70px; border-radius:7px;
-    border:1px dashed rgba(195,154,95,.38);
+    border:1px dashed rgba(214,162,96,.4);
     display:flex; align-items:center; justify-content:center; position:relative;
   }
-  .touch-visual svg{ width:28px; height:28px; opacity:.45; }
+  .touch-visual svg{ width:28px; height:28px; opacity:.5; }
   .touch-visual .lbl{
     position:absolute; bottom:7px; left:0; right:0; text-align:center;
-    font-size:7.5px; letter-spacing:.14em; text-transform:uppercase; color:rgba(245,239,226,.38);
+    font-size:7.5px; letter-spacing:.14em; text-transform:uppercase; color:rgba(244,233,217,.4);
   }
 
   /* ================= LÁMINA 3 — PERSONALIZACIÓN ================= */
   .s3-body{ flex:1; display:grid; grid-template-columns:0.86fr 1.14fr; gap:clamp(16px,2vw,22px); }
   .s3-photo{
-    border-radius:16px;
-    border:1px dashed rgba(23,19,16,.28);
-    background:var(--paper-2);
+    border-radius:16px; border:1px dashed rgba(214,162,96,.38);
+    background:var(--surface);
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
     min-height:150px; position:relative; overflow:hidden; padding:20px;
   }
-  .s3-photo .ph-ic svg{ width:38px; height:38px; color:var(--gold-soft); }
-  .s3-photo .ph-txt{
-    font-size:9.5px; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--muted); text-align:center;
-  }
-  .s3-photo .ph-script{
-    font-size:clamp(15px,1.5vw,19px); color:var(--gold-soft); text-align:center;
-  }
+  .s3-photo .ph-ic svg{ width:38px; height:38px; color:var(--gold); }
+  .s3-photo .ph-txt{ font-size:9.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); text-align:center; }
+  .s3-photo .ph-script{ font-size:clamp(15px,1.5vw,19px); color:var(--gold-hi); text-align:center; }
 
   .s3-list{ display:flex; flex-direction:column; gap:clamp(14px,1.8vw,20px); }
   .stat-card{
     flex:1.15;
-    background:linear-gradient(115deg, var(--navy-2), var(--navy) 62%, #0a1420);
+    background:linear-gradient(115deg, var(--pack-blue-hi), var(--pack-blue) 58%, var(--pack-blue-lo));
     border-radius:16px; padding:clamp(20px,2.6vh,28px) clamp(22px,2.6vw,32px);
     color:var(--cream); display:flex; align-items:center; gap:clamp(20px,2.6vw,36px);
     position:relative; overflow:hidden; min-height:0;
+    box-shadow:0 14px 34px rgba(0,0,0,.34);
   }
   .stat-card .ring{
     position:absolute; top:50%; left:clamp(58px,9vw,104px); transform:translate(-50%,-50%);
     width:clamp(120px,17vw,190px); height:clamp(120px,17vw,190px);
-    border-radius:50%; border:1px solid rgba(195,154,95,.26);
+    border-radius:50%; border:1px solid rgba(214,162,96,.28);
   }
-  .stat-card .ring::after{
-    content:""; position:absolute; inset:22px; border-radius:50%;
-    border:1px solid rgba(195,154,95,.26);
-  }
+  .stat-card .ring::after{ content:""; position:absolute; inset:22px; border-radius:50%; border:1px solid rgba(214,162,96,.28); }
   .stat-card .big{
     font-size:clamp(42px,min(6.4vw,9.5vh),86px); font-weight:700; color:var(--gold);
-    line-height:1; position:relative; flex:none;
-    width:clamp(110px,17vw,190px); text-align:center;
+    line-height:1; position:relative; flex:none; width:clamp(110px,17vw,190px); text-align:center;
   }
   .stat-card .txt{ position:relative; }
   .stat-card .no{ font-size:10.5px; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; margin-bottom:8px; }
   .stat-card h4{ font-size:clamp(17px,1.7vw,22px); font-weight:600; margin-bottom:7px; line-height:1.2; }
-  .stat-card h4 .script{ color:var(--gold); font-weight:600; }
-  .stat-card p{ font-size:13px; line-height:1.55; color:rgba(245,239,226,.68); font-weight:400; max-width:44ch; }
+  .stat-card h4 .script{ color:var(--gold-hi); font-weight:500; }
+  .stat-card p{ font-size:13px; line-height:1.55; color:rgba(244,233,217,.7); font-weight:400; max-width:44ch; }
 
   .flat-card{
-    flex:1; background:var(--paper-2); border:1px solid var(--line); border-radius:14px;
+    flex:1;
+    background:linear-gradient(160deg, rgba(246,232,212,.085), rgba(246,232,212,.04));
+    border:1px solid var(--line); border-radius:14px;
     padding:clamp(16px,2vh,22px) clamp(20px,2.2vw,26px);
     display:flex; align-items:center; gap:20px; position:relative; overflow:hidden;
   }
   .flat-card .ic{
     width:44px; height:44px; border-radius:50%; flex:none;
-    background:var(--navy); display:flex; align-items:center; justify-content:center;
+    background:rgba(10,63,118,.85); border:1px solid rgba(214,162,96,.3);
+    display:flex; align-items:center; justify-content:center;
   }
   .flat-card .ic svg{ width:21px; height:21px; }
-  .flat-card h4{ font-size:16.5px; font-weight:600; margin-bottom:5px; }
-  .flat-card p{ font-size:13px; line-height:1.5; color:#4c463b; font-weight:400; max-width:48ch; }
+  .flat-card h4{ font-size:16.5px; font-weight:600; margin-bottom:5px; color:var(--cream); }
+  .flat-card p{ font-size:13px; line-height:1.5; color:var(--body); font-weight:400; max-width:48ch; }
   .flat-card p.note{
-    margin-top:5px; color:var(--gold-soft); font-size:13px;
+    margin-top:5px; color:var(--gold-hi); font-size:13.5px;
     font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600;
   }
-  .flat-card .side-illo{ margin-left:auto; flex:none; opacity:.5; }
-  .flat-card .side-illo svg{ width:clamp(34px,4vw,48px); height:clamp(34px,4vw,48px); color:var(--gold-soft); }
+  .flat-card .side-illo{ margin-left:auto; flex:none; opacity:.4; }
+  .flat-card .side-illo svg{ width:clamp(34px,4vw,48px); height:clamp(34px,4vw,48px); color:var(--gold); }
+  .checklist{ list-style:none; display:flex; flex-direction:column; gap:7px; margin-top:10px; }
+  .checklist li{ display:flex; align-items:flex-start; gap:9px; font-size:13px; line-height:1.4; color:var(--body); }
+  .checklist svg{ width:15px; height:15px; flex:none; margin-top:1px; color:var(--gold); }
 
   /* ================= LÁMINA 4 — OFERTA ================= */
   .s4-hero{
     flex:1; border-radius:18px;
     background:
-      radial-gradient(120% 100% at 12% 0%, rgba(255,255,255,.18), rgba(255,255,255,0) 46%),
+      radial-gradient(120% 100% at 12% 0%, rgba(255,255,255,.17), rgba(255,255,255,0) 46%),
       linear-gradient(135deg, var(--terra-1) 0%, var(--terra-2) 55%, var(--terra-3) 100%);
     color:var(--cream);
     padding:clamp(22px,3.4vh,38px) clamp(22px,3.4vw,44px);
     display:flex; flex-direction:column; gap:18px; position:relative; overflow:hidden;
+    box-shadow:0 18px 46px rgba(0,0,0,.4);
   }
   .s4-top{ display:flex; gap:clamp(22px,3.4vw,46px); flex:1; align-items:center; }
-  .s4-badge{
-    font-size:11.5px; letter-spacing:.24em; text-transform:uppercase;
-    font-weight:600; color:rgba(245,239,226,.9);
-  }
-  .s4-mid{ flex:1.2; display:flex; flex-direction:column; justify-content:center; max-width:34ch; }
-  .s4-mid h1{
-    font-size:clamp(29px,min(4.6vw,7vh),60px); font-weight:700; line-height:1.08; letter-spacing:-.012em;
-  }
-  .s4-mid h1 .script{ display:block; color:#fff4e2; font-weight:600; letter-spacing:0; }
+  .s4-badge{ font-size:11.5px; letter-spacing:.24em; text-transform:uppercase; font-weight:600; color:rgba(244,233,217,.9); }
+  .s4-mid{ flex:1.2; display:flex; flex-direction:column; justify-content:center; max-width:36ch; }
+  .s4-mid h1{ font-size:clamp(29px,min(4.6vw,7vh),60px); font-weight:700; line-height:1.08; letter-spacing:-.012em; }
+  .s4-mid h1 .script{ display:block; color:#FFF2DF; font-weight:500; letter-spacing:0; }
   .s4-mid p{
     margin-top:16px; font-size:clamp(13.5px,min(1.4vw,2.3vh),17px); line-height:1.55;
-    max-width:44ch; color:rgba(245,239,226,.92); font-weight:400;
+    max-width:44ch; color:rgba(244,233,217,.93); font-weight:400;
   }
   .s4-pill{
     display:inline-flex; align-items:center; gap:9px; margin-top:20px;
-    padding:9px 16px; border:1px solid rgba(245,239,226,.42); border-radius:999px;
+    padding:9px 16px; border:1px solid rgba(244,233,217,.45); border-radius:999px;
     font-size:clamp(10px,1.4vw,11.5px); letter-spacing:.06em; text-transform:uppercase;
     font-weight:600; color:var(--cream); width:fit-content; max-width:100%;
   }
   .s4-pill svg{ width:14px; height:14px; flex:none; }
   .s4-illo{ flex:1; display:flex; align-items:center; justify-content:center; min-width:0; }
-  .s4-illo .illo-grid{
-    width:min(100%,clamp(210px,38vh,350px));
-    border-color:rgba(245,239,226,.4); color:var(--cream);
-  }
-  .s4-illo .cell{ border-right-color:rgba(245,239,226,.28); border-bottom-color:rgba(245,239,226,.28); }
+  .s4-illo .illo-grid{ width:min(100%,clamp(210px,38vh,350px)); border-color:rgba(244,233,217,.42); color:var(--cream); }
+  .s4-illo .cell{ border-right-color:rgba(244,233,217,.3); border-bottom-color:rgba(244,233,217,.3); }
   .s4-foot{
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px 20px;
-    border-top:1px solid rgba(245,239,226,.28); padding-top:16px;
+    border-top:1px solid rgba(244,233,217,.3); padding-top:16px;
   }
-  .s4-foot .brand{ display:flex; align-items:center; gap:12px; }
-  .s4-foot .brand .wordmark{ font-size:20px; color:var(--cream); }
-  .s4-foot .brand .wordmark span{ color:#ffe6c2; }
-  .s4-foot .tagline{ font-size:clamp(14px,1.4vw,18px); color:#fff2df; }
-  .s4-foot .tag{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:rgba(245,239,226,.75); }
+  .s4-foot .brand{ display:flex; align-items:center; gap:11px; }
+  .s4-foot .wm-blue{ font-size:clamp(24px,2.2vw,30px); color:var(--cream); }
+  .s4-foot .wm-sep{ background:rgba(255,240,222,.55); }
+  .s4-foot .wm-cafe{ color:#FFE9C8; }
+  .s4-foot .ve-map{ color:#FFE9C8; filter:drop-shadow(0 0 6px rgba(255,233,200,.45)); }
+  .s4-foot .tagline{ font-size:clamp(14px,1.4vw,18px); color:#FFF2DF; }
+  .s4-foot .tag{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:rgba(244,233,217,.78); }
 
-  /* ================= NAV ================= */
+  /* ================= NAVEGACIÓN ================= */
   .nav{
     position:fixed; bottom:3vh; left:50%; transform:translateX(-50%);
     display:flex; align-items:center; gap:18px;
-    background:rgba(23,19,16,.88); padding:10px 16px; border-radius:999px;
-    z-index:30; backdrop-filter:blur(6px);
+    background:rgba(246,232,212,.09); border:1px solid var(--line);
+    padding:9px 15px; border-radius:999px; z-index:30; backdrop-filter:blur(10px);
   }
   .dots{ display:flex; gap:9px; }
-  .dot{ width:6px; height:6px; border-radius:50%; background:rgba(245,239,226,.28); cursor:pointer; transition:background .3s, transform .3s; }
+  .dot{ width:6px; height:6px; border-radius:50%; background:rgba(244,233,217,.3); cursor:pointer; transition:background .3s, transform .3s; }
   .dot.active{ background:var(--gold); transform:scale(1.4); }
   .nav-btn{ width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .25s; }
-  .nav-btn:hover{ background:rgba(245,239,226,.1); }
+  .nav-btn:hover{ background:rgba(244,233,217,.12); }
   .nav-btn svg{ width:13px; height:13px; }
   .counter{
-    position:fixed; bottom:3vh; right:5vw; font-size:11px; letter-spacing:.14em;
-    z-index:30; background:rgba(23,19,16,.88); color:var(--cream);
-    padding:8px 14px; border-radius:999px;
+    position:fixed; bottom:3vh; right:5vw; font-size:11px; letter-spacing:.14em; z-index:30;
+    background:rgba(246,232,212,.09); border:1px solid var(--line); color:var(--cream);
+    padding:7px 13px; border-radius:999px; backdrop-filter:blur(10px);
   }
   .progress-line{ position:fixed; top:0; left:0; height:2px; background:var(--gold); z-index:40; transition:width .5s ease; }
 
-  /* Al apilarse, los bloques dejan de competir por la altura y crecen con su contenido */
+  /* ================= RESPONSIVE ================= */
   @media (max-width:980px){
     .s1-grid, .s2-grid, .s3-body, .s4-hero, .s4-top{ flex:none; min-height:auto; }
     .s1-illo, .s1-right, .s3-list, .stat-card, .flat-card{ min-height:auto; }
     .stat-card, .flat-card{ flex:none; }
+    .decor{ display:none; }
 
     .s1-grid{ grid-template-columns:1fr; }
     .s1-lead{ flex:none; }
-    .s1-agenda{ grid-template-columns:repeat(2,1fr); gap:14px 20px; }
+    .s1-agenda{ grid-template-columns:repeat(2,1fr); gap:10px; }
     .s1-illo{ padding:4px 0; }
     .s1-illo .illo-grid{ width:min(100%,270px); }
     .s2-head{ flex-direction:column; align-items:flex-start; gap:16px; }
@@ -392,8 +449,6 @@
     .s1-agenda{ margin-top:16px; padding-top:12px; }
     .s1-illo .illo-grid{ width:min(100%,170px); }
     .pack-frame{ padding:16px 16px 12px; gap:10px; }
-    .touch-card{ padding:15px 15px 14px; }
-    .touch-visual{ margin:10px 0; min-height:48px; }
     .s4-illo .illo-grid{ width:min(100%,190px); }
   }
 
@@ -406,21 +461,51 @@
 
 <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
 <defs>
-  <symbol id="veFlag" viewBox="0 0 90 60">
-    <rect width="90" height="20" fill="#f6c945"/>
-    <rect y="20" width="90" height="20" fill="#1c3d8f"/>
-    <rect y="40" width="90" height="20" fill="#a4262c"/>
-    <path fill="#fff" transform="translate(12,33)" d="M0,-3.4 0.823,-1.133 3.23,-1.05 1.331,0.433 1.999,2.751 0,1.4 -1.999,2.751 -1.331,0.433 -3.23,-1.05 -0.823,-1.133Z"/>
-    <path fill="#fff" transform="translate(21.4,30.4)" d="M0,-3.4 0.823,-1.133 3.23,-1.05 1.331,0.433 1.999,2.751 0,1.4 -1.999,2.751 -1.331,0.433 -3.23,-1.05 -0.823,-1.133Z"/>
-    <path fill="#fff" transform="translate(30.9,28.3)" d="M0,-3.4 0.823,-1.133 3.23,-1.05 1.331,0.433 1.999,2.751 0,1.4 -1.999,2.751 -1.331,0.433 -3.23,-1.05 -0.823,-1.133Z"/>
-    <path fill="#fff" transform="translate(40.3,27.15)" d="M0,-3.4 0.823,-1.133 3.23,-1.05 1.331,0.433 1.999,2.751 0,1.4 -1.999,2.751 -1.331,0.433 -3.23,-1.05 -0.823,-1.133Z"/>
-    <path fill="#fff" transform="translate(49.7,27.15)" d="M0,-3.4 0.823,-1.133 3.23,-1.05 1.331,0.433 1.999,2.751 0,1.4 -1.999,2.751 -1.331,0.433 -3.23,-1.05 -0.823,-1.133Z"/>
-    <path fill="#fff" transform="translate(59.1,28.3)" d="M0,-3.4 0.823,-1.133 3.23,-1.05 1.331,0.433 1.999,2.751 0,1.4 -1.999,2.751 -1.331,0.433 -3.23,-1.05 -0.823,-1.133Z"/>
-    <path fill="#fff" transform="translate(68.6,30.4)" d="M0,-3.4 0.823,-1.133 3.23,-1.05 1.331,0.433 1.999,2.751 0,1.4 -1.999,2.751 -1.331,0.433 -3.23,-1.05 -0.823,-1.133Z"/>
-    <path fill="#fff" transform="translate(78,33)" d="M0,-3.4 0.823,-1.133 3.23,-1.05 1.331,0.433 1.999,2.751 0,1.4 -1.999,2.751 -1.331,0.433 -3.23,-1.05 -0.823,-1.133Z"/>
+  <!-- Silueta de Venezuela -->
+  <symbol id="icVenezuela" viewBox="0 0 132 100">
+    <path fill="rgba(214,162,96,.18)" d="M5.1,12.3 Q3.2,16.0 2.8,18.6 Q2.4,21.2 1.2,23.2 Q0.0,25.2 2.3,26.8 Q4.5,28.3 6.1,31.3 Q7.6,34.4 7.3,37.8 Q7.0,41.3 8.7,43.2 Q10.5,45.0 14.9,45.3 Q19.3,45.6 20.8,45.2 Q22.3,44.8 24.6,45.6 Q26.9,46.4 30.4,50.0 Q33.9,53.6 40.2,52.9 Q46.5,52.1 47.8,52.8 Q49.1,53.5 48.7,55.9 Q48.3,58.3 47.4,59.3 Q46.5,60.4 46.4,63.5 Q46.3,66.6 48.4,72.0 Q50.5,77.3 48.7,79.3 Q46.9,81.3 49.4,83.2 Q51.8,85.2 53.5,90.2 Q55.1,95.2 57.2,97.1 Q59.3,99.0 61.8,98.8 Q64.3,98.6 65.8,99.3 Q67.2,100.0 69.3,97.9 Q71.5,95.7 74.6,94.4 Q77.8,93.1 79.4,91.1 Q81.1,89.1 83.6,87.7 Q86.0,86.3 86.0,85.4 Q85.9,84.5 83.5,83.9 Q81.1,83.2 80.0,80.8 Q78.8,78.4 79.4,75.4 Q79.9,72.4 82.9,72.4 Q85.9,72.5 87.7,73.7 Q89.6,74.9 90.4,74.4 Q91.3,73.8 92.1,72.1 Q92.9,70.4 96.9,69.7 Q100.8,68.9 105.4,66.1 Q110.0,63.2 111.2,63.7 Q112.4,64.3 112.3,66.0 Q112.3,67.6 113.8,68.2 Q115.3,68.7 116.1,70.3 Q117.0,71.9 116.9,72.9 Q116.7,73.9 115.7,74.9 Q114.7,75.9 114.3,79.5 Q113.8,83.1 114.2,85.0 Q114.6,86.9 115.3,87.8 Q116.1,88.7 116.2,90.3 Q116.3,91.9 120.8,94.8 Q125.3,97.8 126.2,97.5 Q127.1,97.3 129.6,89.8 Q132.1,82.4 130.7,74.8 Q129.3,67.2 127.6,65.1 Q125.9,63.0 126.9,58.5 Q127.8,54.1 128.0,47.4 Q128.1,40.6 124.5,36.8 Q120.9,33.0 115.2,31.5 Q109.5,30.0 108.7,27.0 Q107.8,24.1 104.4,21.9 Q101.1,19.8 97.6,19.0 Q94.1,18.3 93.6,17.0 Q93.2,15.8 94.1,14.8 Q95.1,13.7 94.9,13.2 Q94.7,12.7 89.4,13.0 Q84.1,13.3 83.2,12.6 Q82.2,12.0 81.9,10.6 Q81.5,9.3 79.7,9.5 Q77.8,9.7 77.5,10.0 Q77.1,10.4 77.5,11.2 Q77.9,12.0 77.7,13.8 Q77.5,15.6 74.5,16.9 Q71.6,18.3 68.5,17.6 Q65.4,16.9 63.3,15.2 Q61.2,13.5 53.7,14.2 Q46.2,14.9 45.1,14.2 Q44.0,13.5 43.1,11.0 Q42.2,8.4 40.5,7.5 Q38.9,6.5 35.7,6.0 Q32.5,5.5 30.9,2.8 Q29.4,0.0 28.1,1.0 Q26.8,1.9 27.0,3.9 Q27.1,6.0 26.5,6.7 Q25.9,7.5 21.0,9.0 Q16.1,10.4 14.6,9.3 Q13.2,8.1 13.7,6.5 Q14.2,4.9 13.7,4.6 Q13.1,4.2 9.1,8.2 Q5.1,12.3 4.2,14.1 Z"/>
   </symbol>
 
-  <!-- ===== Ilustraciones de marca (línea, estilo empaque) ===== -->
+  <!-- ===== Ilustraciones de marca ===== -->
+  <symbol id="icBean" viewBox="0 0 100 100">
+    <g transform="rotate(-32 50 50)">
+      <ellipse cx="50" cy="50" rx="25" ry="37"/>
+      <path d="M50 13c-13 12-13 25 0 37s13 25 0 37"/>
+    </g>
+  </symbol>
+
+  <!-- ===== Set decorativo: trazo fino y formas más suaves ===== -->
+  <symbol id="decBean" viewBox="0 0 100 100">
+    <g transform="rotate(-28 50 50)">
+      <ellipse cx="50" cy="50" rx="22" ry="33"/>
+      <path d="M50 17c-11.5 11-11.5 22 0 33s11.5 22 0 33"/>
+    </g>
+  </symbol>
+
+  <symbol id="decSprig" viewBox="0 0 100 100">
+    <path d="M50 95V10"/>
+    <path d="M50 75c-15-1-23-10-22-23 12-1 21 9 22 23Z"/>
+    <path d="M50 75c15-1 23-10 22-23-12-1-21 9-22 23Z"/>
+    <path d="M50 50c-13-1-20-9-19-20 10-1 18 8 19 20Z"/>
+    <path d="M50 50c13-1 20-9 19-20-10-1-18 8-19 20Z"/>
+    <path d="M50 28c-10-1-15-7-14-15 8-1 14 6 14 15Z"/>
+    <path d="M50 28c10-1 15-7 14-15-8-1-14 6-14 15Z"/>
+  </symbol>
+
+  <symbol id="decSteam" viewBox="0 0 100 100">
+    <path d="M30 90c-9-11-9-20 0-31s9-20 0-31"/>
+    <path d="M50 95c-9-11-9-20 0-31s9-20 0-31"/>
+    <path d="M70 90c-9-11-9-20 0-31s9-20 0-31"/>
+  </symbol>
+
+  <symbol id="decCup" viewBox="0 0 100 100">
+    <path d="M20 42h44l-3.5 30a12 12 0 0 1-12 10.5H35.5a12 12 0 0 1-12-10.5Z"/>
+    <path d="M64 50c9.5 1 15 5.5 15 12s-6 12-15.5 12"/>
+    <path d="M14 88h56"/>
+    <path d="M34 30c5-4 5-8 0-12"/>
+    <path d="M50 30c5-4 5-8 0-12"/>
+  </symbol>
+
   <symbol id="icMountains" viewBox="0 0 100 100">
     <path d="M8 82c0-27 13-48 29-48s29 21 29 48"/>
     <path d="M46 82c0-20 9-36 21-36s21 16 21 36"/>
@@ -512,6 +597,19 @@
     <path d="M24 34 21 22a4 4 0 0 1 4-5h50a4 4 0 0 1 4 5l-3 12"/>
     <path d="M68 46c8 1.6 12 6.4 12 12s-5.6 12-13.6 12"/>
   </symbol>
+
+  <symbol id="icCupSteam" viewBox="0 0 100 100">
+    <path d="M18 44h50l-4 34a9 9 0 0 1-9 8H31a9 9 0 0 1-9-8Z"/>
+    <path d="M68 52c9 1.5 14 6 14 12s-6 12-15 12"/>
+    <path d="M20 86h52"/>
+    <path d="M34 32c5-4 5-8 0-12s-5-8 0-12"/>
+    <path d="M52 32c5-4 5-8 0-12s-5-8 0-12"/>
+  </symbol>
+
+  <symbol id="icCheck" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9.2"/>
+    <path d="M7.9 12.3l2.8 2.8 5.4-6"/>
+  </symbol>
 </defs>
 </svg>
 
@@ -520,42 +618,51 @@
 
   <!-- ===== LÁMINA 1 · PORTADA ===== -->
   <section class="slide active">
+    <div class="decor">
+      <svg class="dec" style="--x:45%;--y:19%;--s:54px;--t:17s;--dd:0s;--r:14deg;--o:.11" viewBox="0 0 100 100" stroke="currentColor"><use href="#decBean"/></svg>
+      <svg class="dec" style="--x:49%;--y:46%;--s:92px;--t:21s;--dd:-6s;--r:-9deg;--o:.085" viewBox="0 0 100 100" stroke="currentColor"><use href="#decSprig"/></svg>
+      <svg class="dec" style="--x:42%;--y:74%;--s:60px;--t:18s;--dd:-11s;--r:7deg;--o:.10" viewBox="0 0 100 100" stroke="currentColor"><use href="#decCup"/></svg>
+    </div>
     <div class="slide-head">
       <div class="brand-block">
-        <div class="wordmark">Blue<span> Café</span></div>
-        <svg class="ve-flag" width="26" height="17"><use href="#veFlag"/></svg>
+        <div class="brand-row">
+          <span class="wm-blue">blue</span>
+          <span class="wm-sep"></span>
+          <span class="wm-cafe">Café</span>
+          <svg class="ve-map" width="34" height="26" viewBox="0 0 132 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"><use href="#icVenezuela"/></svg>
+        </div>
       </div>
       <div class="slide-index">01 / 04 · Concepto</div>
     </div>
     <div class="s1-grid shrink">
       <div class="s1-left">
         <div class="s1-lead">
-          <div class="kicker">Supermercados Páramo</div>
-          <h1>Así lucirán <span class="script">los nuevos locales</span></h1>
-          <p>Un vistazo al concepto de cafetería Blue Café dentro de cada Páramo: Identidad de marca, personalización del espacio y la experiencia en el punto de venta.</p>
-          <div class="s1-meta">
+          <div class="kicker rv" style="--d:.10s">Supermercados Páramo</div>
+          <h1 class="rv" style="--d:.18s">Así lucirán <span class="script">los nuevos locales</span></h1>
+          <p class="rv" style="--d:.30s">Un vistazo al concepto de cafetería Blue Café en los Páramos asignados: Identidad de marca, personalización del espacio y la experiencia en el punto de venta.</p>
+          <div class="s1-meta rv" style="--d:.40s">
             <div><span>Presenta</span><strong>Blue Café</strong></div>
             <div><span>Para</span><strong>Supermercados Páramo</strong></div>
             <div><span>Fecha</span><strong>Agosto 2026</strong></div>
           </div>
         </div>
-        <div class="s1-agenda">
-          <div class="item now"><span class="no">01</span><span class="lbl">Concepto</span></div>
-          <div class="item"><span class="no">02</span><span class="lbl">Identidad en el local</span></div>
-          <div class="item"><span class="no">03</span><span class="lbl">Personalización</span></div>
-          <div class="item"><span class="no">04</span><span class="lbl">Oferta de lanzamiento</span></div>
+        <div class="s1-agenda rv" style="--d:.52s">
+          <button class="nav-item now" data-go="0"><span class="no">01</span><span class="lbl">Concepto</span><span class="bar"></span></button>
+          <button class="nav-item" data-go="1"><span class="no">02</span><span class="lbl">Identidad en el local</span><span class="bar"></span></button>
+          <button class="nav-item" data-go="2"><span class="no">03</span><span class="lbl">Personalización</span><span class="bar"></span></button>
+          <button class="nav-item" data-go="3"><span class="no">04</span><span class="lbl">Oferta de lanzamiento</span><span class="bar"></span></button>
         </div>
       </div>
-      <div class="s1-right">
+      <div class="s1-right rv-panel" style="--d:.20s">
         <div class="pack-frame">
-          <div class="pack-lockup">
+          <div class="pack-lockup rv" style="--d:.42s">
             <div class="pack-blue">blue</div>
             <div class="pack-cafe">Café</div>
           </div>
-          <div class="pack-rule"></div>
-          <div class="pack-script script">de tierras venezolanas</div>
+          <div class="pack-rule rv" style="--d:.50s"></div>
+          <div class="pack-script script rv" style="--d:.56s">de tierras venezolanas</div>
           <div class="s1-illo">
-            <div class="illo-grid illo-3" style="color:var(--pack-gold)">
+            <div class="illo-grid illo-3" style="color:var(--gold)">
               <div class="cell"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><use href="#icMountains"/></svg></div>
               <div class="cell"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><use href="#icFarmer"/></svg></div>
               <div class="cell"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><use href="#icBranch"/></svg></div>
@@ -572,9 +679,19 @@
 
   <!-- ===== LÁMINA 2 · IDENTIDAD ===== -->
   <section class="slide">
+    <div class="decor">
+      <svg class="dec" style="--x:6%;--y:66%;--s:68px;--t:19s;--dd:0s;--r:-16deg;--o:.09" viewBox="0 0 100 100" stroke="currentColor"><use href="#decBean"/></svg>
+      <svg class="dec" style="--x:95%;--y:78%;--s:74px;--t:22s;--dd:-7s;--r:8deg;--o:.08" viewBox="0 0 100 100" stroke="currentColor"><use href="#decSprig"/></svg>
+      <svg class="dec" style="--x:69%;--y:9%;--s:46px;--t:16s;--dd:-12s;--r:12deg;--o:.10" viewBox="0 0 100 100" stroke="currentColor"><use href="#decSteam"/></svg>
+    </div>
     <div class="slide-head">
       <div class="brand-block">
-        <div class="wordmark">Blue<span> Café</span></div>
+        <div class="brand-row">
+          <span class="wm-blue">blue</span>
+          <span class="wm-sep"></span>
+          <span class="wm-cafe">Café</span>
+          <svg class="ve-map" width="34" height="26" viewBox="0 0 132 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"><use href="#icVenezuela"/></svg>
+        </div>
         <div class="eyebrow">En el local</div>
       </div>
       <div class="slide-index">02 / 04 · Identidad</div>
@@ -591,42 +708,42 @@
     </div>
     <div class="s2-grid stagger shrink">
       <div class="touch-card">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#C39A5F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#D6A260" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
         <div class="no">01</div>
         <h4>Personal uniformado</h4>
         <p>Equipo vestido con delantal y gorra Blue Café.</p>
         <div class="touch-visual shrink">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#C39A5F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#D6A260" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
           <span class="lbl">Foto por confirmar</span>
         </div>
       </div>
       <div class="touch-card">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#C39A5F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-3.5 10.9c.5.4.8 1 .9 1.6l.1.5h5l.1-.5c.1-.6.4-1.2.9-1.6A6 6 0 0 0 12 3Z"/><path d="M10 18.5h4M10.5 21h3"/></svg></div>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#D6A260" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-3.5 10.9c.5.4.8 1 .9 1.6l.1.5h5l.1-.5c.1-.6.4-1.2.9-1.6A6 6 0 0 0 12 3Z"/><path d="M10 18.5h4M10.5 21h3"/></svg></div>
         <div class="no">02</div>
         <h4>Anuncio luminoso</h4>
         <p>En la pared izquierda del cafetín.</p>
         <div class="touch-visual shrink">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#C39A5F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-3.5 10.9c.5.4.8 1 .9 1.6l.1.5h5l.1-.5c.1-.6.4-1.2.9-1.6A6 6 0 0 0 12 3Z"/><path d="M10 18.5h4M10.5 21h3"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#D6A260" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-3.5 10.9c.5.4.8 1 .9 1.6l.1.5h5l.1-.5c.1-.6.4-1.2.9-1.6A6 6 0 0 0 12 3Z"/><path d="M10 18.5h4M10.5 21h3"/></svg>
           <span class="lbl">Foto por confirmar</span>
         </div>
       </div>
       <div class="touch-card">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#C39A5F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h11l-1 11.5a2 2 0 0 1-2 1.5H9a2 2 0 0 1-2-1.5L6 8Z"/><path d="M6 8 5.2 5.5A1 1 0 0 1 6.2 4h9.6a1 1 0 0 1 1 1.5L16 8"/></svg></div>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#D6A260" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h11l-1 11.5a2 2 0 0 1-2 1.5H9a2 2 0 0 1-2-1.5L6 8Z"/><path d="M6 8 5.2 5.5A1 1 0 0 1 6.2 4h9.6a1 1 0 0 1 1 1.5L16 8"/></svg></div>
         <div class="no">03</div>
         <h4>Vasos de marca</h4>
         <p>En mostrador, identificados con ambas marcas: Blue y Páramo.</p>
         <div class="touch-visual shrink">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#C39A5F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h11l-1 11.5a2 2 0 0 1-2 1.5H9a2 2 0 0 1-2-1.5L6 8Z"/><path d="M6 8 5.2 5.5A1 1 0 0 1 6.2 4h9.6a1 1 0 0 1 1 1.5L16 8"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#D6A260" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h11l-1 11.5a2 2 0 0 1-2 1.5H9a2 2 0 0 1-2-1.5L6 8Z"/><path d="M6 8 5.2 5.5A1 1 0 0 1 6.2 4h9.6a1 1 0 0 1 1 1.5L16 8"/></svg>
           <span class="lbl">Foto por confirmar</span>
         </div>
       </div>
       <div class="touch-card">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#C39A5F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#D6A260" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg></div>
         <div class="no">04</div>
         <h4>Menú de pantallas</h4>
         <p>Personalización del menú de bebidas.</p>
         <div class="touch-visual shrink">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#C39A5F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#D6A260" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg>
           <span class="lbl">Foto por confirmar</span>
         </div>
       </div>
@@ -635,9 +752,19 @@
 
   <!-- ===== LÁMINA 3 · PERSONALIZACIÓN ===== -->
   <section class="slide">
+    <div class="decor">
+      <svg class="dec" style="--x:50%;--y:96%;--s:66px;--t:20s;--dd:0s;--r:-12deg;--o:.09" viewBox="0 0 100 100" stroke="currentColor"><use href="#decBean"/></svg>
+      <svg class="dec" style="--x:4%;--y:24%;--s:58px;--t:18s;--dd:-6s;--r:10deg;--o:.085" viewBox="0 0 100 100" stroke="currentColor"><use href="#decCup"/></svg>
+      <svg class="dec" style="--x:97%;--y:36%;--s:44px;--t:16s;--dd:-11s;--r:-8deg;--o:.10" viewBox="0 0 100 100" stroke="currentColor"><use href="#decBean"/></svg>
+    </div>
     <div class="slide-head">
       <div class="brand-block">
-        <div class="wordmark">Blue<span> Café</span></div>
+        <div class="brand-row">
+          <span class="wm-blue">blue</span>
+          <span class="wm-sep"></span>
+          <span class="wm-cafe">Café</span>
+          <svg class="ve-map" width="34" height="26" viewBox="0 0 132 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"><use href="#icVenezuela"/></svg>
+        </div>
         <div class="eyebrow">Personalización</div>
       </div>
       <div class="slide-index">03 / 04 · El espacio</div>
@@ -654,24 +781,28 @@
           <div class="big">360°</div>
           <div class="txt">
             <div class="no">Mesa central</div>
-            <h4>Rotulada en <span class="script">toda su circunferencia</span></h4>
-            <p>La mesa alta al centro del cafetín, vestida con la marca en los 360° de su superficie.</p>
+            <h4>Rotulación <span class="script">en todo su contorno</span></h4>
+            <p>La mesa alta del centro del cafetín llevará la marca alrededor de toda su circunferencia.</p>
           </div>
         </div>
         <div class="flat-card">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#C39A5F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1 0 1.8-.6 1.8-1.5 0-.4-.2-.8-.5-1.1-.3-.3-.5-.7-.5-1.1 0-.9.8-1.6 1.7-1.6H16a4 4 0 0 0 4-4c0-4.6-3.9-8.7-8-8.7Z"/><circle cx="7.6" cy="10.8" r=".9"/><circle cx="10.2" cy="7.8" r=".9"/><circle cx="14.4" cy="7.8" r=".9"/><circle cx="16.4" cy="11.4" r=".9"/></svg></div>
-        <div>
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#D6A260" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1 0 1.8-.6 1.8-1.5 0-.4-.2-.8-.5-1.1-.3-.3-.5-.7-.5-1.1 0-.9.8-1.6 1.7-1.6H16a4 4 0 0 0 4-4c0-4.6-3.9-8.7-8-8.7Z"/><circle cx="7.6" cy="10.8" r=".9"/><circle cx="10.2" cy="7.8" r=".9"/><circle cx="14.4" cy="7.8" r=".9"/><circle cx="16.4" cy="11.4" r=".9"/></svg></div>
+          <div>
             <h4>Tope de mesas personalizado</h4>
-            <p>Diversos artes que representan la marca en cada mesa del cafetín.</p>
+            <ul class="checklist">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><use href="#icCheck"/></svg>Todas las mesas del cafetín, intervenidas</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><use href="#icCheck"/></svg>Un arte distinto en cada tope</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><use href="#icCheck"/></svg>Diseños que representan la marca</li>
+            </ul>
           </div>
           <div class="side-illo"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#icBeanSun"/></svg></div>
         </div>
         <div class="flat-card">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#C39A5F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="9" rx="1"/><path d="M8 19v-5M16 19v-5"/></svg></div>
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#D6A260" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="9" rx="1"/><path d="M8 19v-5M16 19v-5"/></svg></div>
           <div>
             <h4>Espacio publicitario superior</h4>
-            <p>Te proponemos ocupar uno de los espacios de publicidad en la parte superior del local.</p>
-            <p class="note">Arte proporcionado por Blue Café.</p>
+            <p>Proponemos ocupar uno de los espacios de publicidad en la parte superior de los locales, con el arte proporcionado por Blue Café.</p>
+            <p class="note">Quedamos atentos a su autorización.</p>
           </div>
           <div class="side-illo"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#icMountains"/></svg></div>
         </div>
@@ -681,9 +812,18 @@
 
   <!-- ===== LÁMINA 4 · OFERTA ===== -->
   <section class="slide">
+    <div class="decor">
+      <svg class="dec" style="--x:4%;--y:54%;--s:64px;--t:19s;--dd:0s;--r:-15deg;--o:.10" viewBox="0 0 100 100" stroke="currentColor"><use href="#decBean"/></svg>
+      <svg class="dec" style="--x:96%;--y:17%;--s:50px;--t:17s;--dd:-8s;--r:11deg;--o:.10" viewBox="0 0 100 100" stroke="currentColor"><use href="#decSprig"/></svg>
+    </div>
     <div class="slide-head">
       <div class="brand-block">
-        <div class="wordmark">Blue<span> Café</span></div>
+        <div class="brand-row">
+          <span class="wm-blue">blue</span>
+          <span class="wm-sep"></span>
+          <span class="wm-cafe">Café</span>
+          <svg class="ve-map" width="34" height="26" viewBox="0 0 132 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"><use href="#icVenezuela"/></svg>
+        </div>
         <div class="eyebrow">Lanzamiento</div>
       </div>
       <div class="slide-index">04 / 04 · Oferta</div>
@@ -695,7 +835,7 @@
           <h1>Compra 500&nbsp;g, <span class="script">llévate un café gratis</span></h1>
           <p>Por la compra de un café Blue de 500 g, un café gratis en el cafetín: Del anaquel a la experiencia en vivo.</p>
           <div class="s4-pill">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#F5EFE2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-8"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7S8 7 8 4a2.5 2.5 0 0 1 5-.4"/><path d="M12 7s4 0 4-3a2.5 2.5 0 0 0-5-.4"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#F4E9D9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-8"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7S8 7 8 4a2.5 2.5 0 0 1 5-.4"/><path d="M12 7s4 0 4-3a2.5 2.5 0 0 0-5-.4"/></svg>
             500 g = 1 café gratis
           </div>
         </div>
@@ -710,8 +850,10 @@
       </div>
       <div class="s4-foot">
         <div class="brand">
-          <div class="wordmark">Blue<span> Café</span></div>
-          <svg class="ve-flag" width="22" height="14"><use href="#veFlag"/></svg>
+          <span class="wm-blue">blue</span>
+          <span class="wm-sep"></span>
+          <span class="wm-cafe">Café</span>
+          <svg class="ve-map" width="32" height="24" viewBox="0 0 132 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"><use href="#icVenezuela"/></svg>
         </div>
         <div class="tagline script">Enamorados de lo nuestro</div>
         <div class="tag">100% café venezolano</div>
@@ -722,9 +864,9 @@
 </div>
 
 <div class="nav">
-  <div class="nav-btn" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="#f5efe2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+  <div class="nav-btn" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="#F4E9D9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
   <div class="dots" id="dots"></div>
-  <div class="nav-btn" id="nextBtn"><svg viewBox="0 0 24 24" fill="none" stroke="#f5efe2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+  <div class="nav-btn" id="nextBtn"><svg viewBox="0 0 24 24" fill="none" stroke="#F4E9D9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
 </div>
 <div class="counter" id="counter">01 / 04</div>
 
@@ -738,7 +880,7 @@
   slides.forEach((_, i) => {
     const d = document.createElement('div');
     d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.addEventListener('click', () => go(i));
+    d.addEventListener('click', (e) => { e.stopPropagation(); go(i); });
     dotsWrap.appendChild(d);
   });
   const dots = Array.from(dotsWrap.children);
@@ -755,8 +897,20 @@
     progressLine.style.width = ((current + 1) / slides.length * 100) + '%';
   }
 
-  document.getElementById('prevBtn').addEventListener('click', () => go(current - 1));
-  document.getElementById('nextBtn').addEventListener('click', () => go(current + 1));
+  // Índice de la portada: cada punto lleva a su lámina
+  document.querySelectorAll('[data-go]').forEach(el => {
+    el.addEventListener('click', (e) => { e.stopPropagation(); go(Number(el.dataset.go)); });
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', (e) => { e.stopPropagation(); go(current - 1); });
+  document.getElementById('nextBtn').addEventListener('click', (e) => { e.stopPropagation(); go(current + 1); });
+
+  // Clic en cualquier otra parte: avanza
+  document.getElementById('deck').addEventListener('click', (e) => {
+    if (e.target.closest('.nav') || e.target.closest('.counter') || e.target.closest('[data-go]')) return;
+    if (String(window.getSelection ? window.getSelection() : '').length > 0) return;
+    go((current + 1) % slides.length);
+  });
 
   window.addEventListener('keydown', (e) => {
     if (['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)) { e.preventDefault(); go(current + 1); }
